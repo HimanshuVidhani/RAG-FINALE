@@ -21,15 +21,14 @@ RETRY_DELAY = 2.0            # seconds between retries
 class EmbeddingManager:
     """Manages text embedding generation using Google Gemini."""
 
-    def __init__(self, api_key: str, model_name: str = "gemini-embedding-exp-03-07"):
+    def __init__(self, api_key: str, model_name: str = "text-embedding-004"):
         """
         Initialize the embedding manager.
 
         Args:
             api_key:    Google Gemini API key
             model_name: Embedding model to use.
-                        Recommended: "gemini-embedding-exp-03-07" (best quality, 3072-dim)
-                        Stable alternative: "text-embedding-004" (768-dim)
+                        Recommended: "text-embedding-004" (768-dim, stable)
         """
         if not api_key:
             raise ValueError("API key must not be empty.")
