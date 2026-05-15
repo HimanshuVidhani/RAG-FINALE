@@ -6,3 +6,4 @@ chromadb==0.4.24
 numpy<2.0.0
 langchain-text-splitters>=0.0.1
 pysqlite3-binary; sys_platform == 'linux'
+protobuf<4.0.0
