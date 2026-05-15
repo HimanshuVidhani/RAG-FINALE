@@ -12,7 +12,7 @@ except ImportError:
     pass
 
 import os
-import streamlit as st
+import streamlit as st # Triggering reload
 from dotenv import load_dotenv
 from pdf_processor import extract_text_from_pdf, create_chunks_with_metadata, get_paper_label
 from vector_store import VectorStoreManager
