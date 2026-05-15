@@ -112,6 +112,13 @@ def initialize_engines(api_key: str):
         st.session_state.embedding_manager = EmbeddingManager(api_key)
         st.session_state.vector_store = VectorStoreManager("./chroma_db")
         st.session_state.synthesis_engine = SynthesisEngine(api_key)
+        # quick smoke-test the embedding client to surface clear errors early
+        try:
+            st.session_state.embedding_manager.embed_query("health-check")
+        except Exception as e:
+            st.error(f"❌ Embedding initialization failed: {e}")
+            return False
+
         st.session_state.initialized = True
         return True
     except Exception as e:
@@ -132,7 +139,13 @@ def process_uploaded_pdf(pdf_file):
 
     with st.spinner(f"🧮 Generating embeddings for {paper_id} ({len(chunks)} chunks)..."):
         texts = [c["text"] for c in chunks]
-        embeddings = st.session_state.embedding_manager.embed_texts(texts)
+        try:
+            embeddings = st.session_state.embedding_manager.embed_texts(texts)
+        except Exception as e:
+            st.error(f"❌ Embedding generation failed for {paper_id}: {e}")
+            # revert paper counter increment and abort processing this file
+            st.session_state.paper_counter = max(0, st.session_state.paper_counter - 1)
+            return None
 
     with st.spinner(f"💾 Storing {paper_id} in vector database..."):
         st.session_state.vector_store.add_chunks(chunks, embeddings)
@@ -183,6 +196,9 @@ def render_sidebar():
                         st.warning("Maximum 5 papers allowed.")
                         break
                     pid = process_uploaded_pdf(f)
+                    if not pid:
+                        # error already shown inside processing; stop processing further files
+                        break
                     st.success(f"✅ {pid}: {f.name}")
                 st.rerun()
 
