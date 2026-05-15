@@ -36,7 +36,7 @@ class SynthesisEngine:
     - Technical methodology synthesis
     """
     
-    def __init__(self, api_key: str, model_name: str = "gemini-1.5-flash-latest"):
+    def __init__(self, api_key: str, model_name: str = "gemini-1.5-flash-8b"):
         self.client = genai.Client(api_key=api_key)
         self.model_name = model_name
     
