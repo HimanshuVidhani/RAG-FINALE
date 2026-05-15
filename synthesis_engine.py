@@ -55,7 +55,7 @@ class SynthesisEngine:
         ))
         
         response = self.client.models.generate_content(
-            model=self.model_name,
+            model="gemini-1.5-pro",
             contents=contents,
             config=types.GenerateContentConfig(
                 system_instruction=SYSTEM_PROMPT,
